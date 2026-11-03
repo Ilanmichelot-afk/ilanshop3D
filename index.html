@@ -575,7 +575,7 @@ function adminCats() {
       <input type="hidden" name="id" value="${ed ? ed.id : ''}">
       <label>Nom *<input name="name" required value="${esc(ed ? ed.name : '')}"></label>
       <label>Image (facultatif)<input type="file" accept="image/*" data-img="category"></label>
-      <div class="row"><button class="btn">${ed ? 'Enregistrer' : 'Créer'}</button>
+      <div class="row"><button type="button" class="btn" onclick="handleForm(this.form)">${ed ? 'Enregistrer' : 'Créer'}</button>
         ${ed ? '<button type="button" class="btn ghost" data-cancel>Annuler</button>' : ''}</div>
     </form>
     <div class="table-wrap"><table>
