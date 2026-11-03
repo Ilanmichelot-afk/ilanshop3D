@@ -684,7 +684,7 @@ function saveProduct(f) {
 }
 function saveCategory(f) {
   const name = f.elements.namedItem('name').value.trim();
-  if (!name) return;
+  if (!name) return toast('Tape un nom de catégorie');
   const id = f.elements.namedItem('id').value;
   if (id) {
     const c = db.categories.find(x => x.id === id);
@@ -796,7 +796,6 @@ document.addEventListener('change', e => {
 });
 
 function handleForm(f) {
-  toast('Enregistrement…');
   switch (f.id) {
     case 'f-checkout': return placeOrder(f);
     case 'f-setup': case 'f-login': return adminAuth(f);
