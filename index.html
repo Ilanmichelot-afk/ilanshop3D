@@ -420,8 +420,9 @@ function renderDrawer() {
 }
 
 function placeOrder(f) {
-  const name = f.name.value.trim();
-  if (!name) { toast('Indique ton nom pour commander'); f.name.focus(); return; }
+  const nameField = f.elements.namedItem('name');
+  const name = nameField.value.trim();
+  if (!name) { toast('Indique ton nom pour commander'); nameField.focus(); return; }
   const t = totals();
   if (!t.lines.length) return;
   for (const l of t.lines) {
@@ -661,14 +662,14 @@ async function adminAuth(f) {
 }
 function saveProduct(f) {
   const data = {
-    name: f.name.value.trim(),
+    name: f.elements.namedItem('name').value.trim(),
     priceCents: Math.round(parseFloat(f.price.value) * 100),
     categoryId: f.categoryId.value || null,
     stock: f.stock.value === '' ? null : parseInt(f.stock.value, 10),
     description: f.description.value.trim()
   };
   if (!data.name || isNaN(data.priceCents)) return toast('Nom et prix obligatoires');
-  const id = f.id.value;
+  const id = f.elements.namedItem('id').value;
   if (id) {
     const p = db.products.find(x => x.id === id);
     Object.assign(p, data, {image: pendingImg || p.image || ''});
@@ -679,9 +680,9 @@ function saveProduct(f) {
   persist('Produit enregistré');
 }
 function saveCategory(f) {
-  const name = f.name.value.trim();
+  const name = f.elements.namedItem('name').value.trim();
   if (!name) return;
-  const id = f.id.value;
+  const id = f.elements.namedItem('id').value;
   if (id) {
     const c = db.categories.find(x => x.id === id);
     c.name = name;
@@ -697,7 +698,7 @@ function savePromo(f) {
   const percent = parseInt(f.percent.value, 10);
   const active = f.active.checked;
   if (!code || !(percent >= 1 && percent <= 100)) return toast('Code et pourcentage valides requis');
-  const id = f.id.value;
+  const id = f.elements.namedItem('id').value;
   if (id) Object.assign(db.promos.find(p => p.id === id), {code, percent, active});
   else db.promos.push({id: uid(), code, percent, active});
   editing = {};
