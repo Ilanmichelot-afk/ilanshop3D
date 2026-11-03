@@ -282,7 +282,10 @@ function load() {
   try { return {...defaults, ...JSON.parse(localStorage.getItem(KEY) || '{}')}; }
   catch { return {...defaults}; }
 }
-function save() { localStorage.setItem(KEY, JSON.stringify(db)); }
+function save() {
+  try { localStorage.setItem(KEY, JSON.stringify(db)); }
+  catch { toast('Enregistrement impossible : stockage plein, utilise des images plus petites'); }
+}
 function saveCart() { localStorage.setItem(KEY + '_cart', JSON.stringify(cart)); }
 function persist(msg) { save(); render(); if (msg) toast(msg); }
 
@@ -762,6 +765,10 @@ document.addEventListener('click', e => {
   if (e.target.id === 'overlay') return toggleCart(false);
   const el = e.target.closest('button,a');
   if (!el) return;
+  if (el.type === 'submit' && el.form) {
+    e.preventDefault();
+    return handleForm(el.form);
+  }
   const d = el.dataset;
   if (d.cartOpen !== undefined) return toggleCart(true);
   if (d.cartClose !== undefined || d.closeCart !== undefined) return toggleCart(false);
@@ -788,9 +795,8 @@ document.addEventListener('change', e => {
   if (t.name === 'active' && t.form && t.form.id === 'f-promo') { /* géré à l’envoi */ }
 });
 
-document.addEventListener('submit', e => {
-  const f = e.target;
-  e.preventDefault();
+function handleForm(f) {
+  toast('Enregistrement…');
   switch (f.id) {
     case 'f-checkout': return placeOrder(f);
     case 'f-setup': case 'f-login': return adminAuth(f);
@@ -801,9 +807,15 @@ document.addEventListener('submit', e => {
     case 'f-cart-promo': return applyPromo(f);
     case 'f-password': return changePassword(f);
   }
+}
+document.addEventListener('submit', e => {
+  e.preventDefault();
+  handleForm(e.target);
 });
 
 window.addEventListener('hashchange', render);
+window.addEventListener('error', e => toast('Erreur : ' + e.message));
+window.addEventListener('unhandledrejection', e => toast('Erreur : ' + (e.reason?.message || e.reason)));
 
 /* ===== Démarrage ===== */
 $('#main').innerHTML = skeleton();
