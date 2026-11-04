@@ -595,6 +595,7 @@ async function saveCategory(f) {
   if (!name) return toast('Tape un nom de catégorie');
   const row = {name};
   if (S.pending.category) { row.image_url = await uploadImage(S.pending.category); S.pending.category = null; }
+  toast('Envoi à la base…');
   const res = id
     ? await sb.from('categories').update(row).eq('id', id)
     : await sb.from('categories').insert(row);
