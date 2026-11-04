@@ -591,6 +591,7 @@ async function saveProduct(f) {
 async function saveCategory(f) {
   const id = f.elements.namedItem('id').value;
   const name = f.elements.namedItem('name').value.trim();
+  toast('Nom lu : "' + name + '"');
   if (!name) return toast('Tape un nom de catégorie');
   const row = {name};
   if (S.pending.category) { row.image_url = await uploadImage(S.pending.category); S.pending.category = null; }
