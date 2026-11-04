@@ -674,7 +674,7 @@ document.addEventListener('click', async e => {
   const d = t.dataset;
   if (d.closeCart !== undefined) return toggleCart(false);
   if (d.openCart !== undefined) return toggleCart(true);
-  if (t.type === 'submit' && t.form) { e.preventDefault(); return handleForm(t.form); }
+  if (t.type === 'submit' && t.form) { e.preventDefault(); toast('Clic reçu'); return handleForm(t.form); }
   if (d.add) return addToCart(d.add);
   if (d.cat !== undefined) { S.currentCat = d.cat; return render(); }
   if (d.qty) return changeQty(d.qty, +d.delta);
